@@ -84,4 +84,10 @@ public class Usuario {
             this.telefone = dados.telefone();
         }
     }
+
+    public void desativarUsuario() {
+        if (this.status == Status.ATIVO) {
+            this.status = Status.INATIVO;
+        }
+    }
 }
