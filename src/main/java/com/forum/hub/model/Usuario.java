@@ -20,10 +20,25 @@ public class Usuario {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    public Usuario(){}
+
     public Usuario(DadosCadastroUsuario dados) {
         this.nome = dados.nome();
         this.email = dados.email();
         this.telefone = dados.telefone();
         this.status = dados.status();
+    }
+
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public Status getStatus() {
+        return status;
     }
 }
