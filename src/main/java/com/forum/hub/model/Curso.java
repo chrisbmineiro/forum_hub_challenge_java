@@ -15,8 +15,12 @@ public class Curso {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nome;
+    private String titulo;
     private String descricao;
+    @Column(name = "carga_horaria", nullable = false)
+    private Integer cargaHoraria;
+    @Column(name = "total_aulas", nullable = false)
+    private Integer totalAulas;
     @Enumerated(EnumType.STRING)
     private Categoria categoria;
 
@@ -24,8 +28,10 @@ public class Curso {
     }
 
     public Curso(DadosCadastroCurso dados) {
-        this.nome = dados.nome();
+        this.titulo = dados.titulo();
         this.descricao = dados.descricao();
+        this.cargaHoraria = dados.cargaHoraria();
+        this.totalAulas = dados.totalAulas();
         this.categoria = dados.categoria();
     }
 
@@ -33,8 +39,8 @@ public class Curso {
         return id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getTitulo() {
+        return titulo;
     }
 
     public String getDescricao() {
@@ -43,5 +49,13 @@ public class Curso {
 
     public Categoria getCategoria() {
         return categoria;
+    }
+
+    public Integer getCargaHoraria() {
+        return cargaHoraria;
+    }
+
+    public Integer getTotalAulas() {
+        return totalAulas;
     }
 }

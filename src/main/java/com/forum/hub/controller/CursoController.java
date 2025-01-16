@@ -1,6 +1,6 @@
 package com.forum.hub.controller;
 
-import com.forum.hub.dto.DadosListagemCurso;
+import com.forum.hub.dto.curso.DadosListagemCurso;
 import com.forum.hub.dto.curso.DadosCadastroCurso;
 import com.forum.hub.model.Curso;
 import com.forum.hub.repository.CursoRepository;
@@ -24,7 +24,6 @@ public class CursoController {
         repository.save(new Curso(dados));
     }
 
-    // TODO: arrumar essa bagaça
     @GetMapping
     public Page<DadosListagemCurso> listarCursos(@PageableDefault(sort = {"categoria"}) Pageable paginacao) {
         return repository.findAll(paginacao).map(DadosListagemCurso::new);
