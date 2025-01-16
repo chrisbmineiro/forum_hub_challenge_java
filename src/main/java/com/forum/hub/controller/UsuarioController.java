@@ -1,14 +1,17 @@
 package com.forum.hub.controller;
 
-import com.forum.hub.dto.DadosListagemUsuario;
+import com.forum.hub.dto.usuario.DadosAtualizacaoUsuario;
+import com.forum.hub.dto.usuario.DadosListagemUsuario;
 import com.forum.hub.dto.usuario.DadosCadastroUsuario;
 import com.forum.hub.model.Usuario;
 import com.forum.hub.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("usuarios")
@@ -24,7 +27,14 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public List<DadosListagemUsuario> listarUsuarios() {
-        return repository.findAll().stream().map(DadosListagemUsuario::new).toList();
+    public Page<DadosListagemUsuario> listarUsuarios(@PageableDefault(sort = {"nome"}) Pageable paginacao) {
+        return repository.findAll(paginacao).map(DadosListagemUsuario::new);
+    }
+
+    @PutMapping
+    @Transactional
+    public void atualizarUsuario(@RequestBody DadosAtualizacaoUsuario dados) {
+        var usuario = repository.getReferenceById(dados.id());
+        usuario.atualizarInformacoes(dados);
     }
 }
