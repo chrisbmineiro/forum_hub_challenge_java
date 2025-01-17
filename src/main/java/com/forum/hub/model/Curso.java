@@ -27,6 +27,7 @@ public class Curso {
 
     @Enumerated(EnumType.STRING)
     private Categoria categoria;
+    private Boolean ativo;
 
     public Curso() {
     }
@@ -37,6 +38,7 @@ public class Curso {
         this.cargaHoraria = dados.cargaHoraria();
         this.totalAulas = dados.totalAulas();
         this.categoria = dados.categoria();
+        this.ativo = true;
     }
 
     public Long getId() {
@@ -63,6 +65,10 @@ public class Curso {
         return totalAulas;
     }
 
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
     public void atualizarInformacoes(DadosAtualizacaoCurso dados) {
         if (dados.titulo() != null) {
             this.titulo = dados.titulo();
@@ -76,5 +82,9 @@ public class Curso {
         if (dados.totalAulas() != null) {
             this.totalAulas = dados.totalAulas();
         }
+    }
+
+    public void excluirCurso() {
+        this.ativo = false;
     }
 }

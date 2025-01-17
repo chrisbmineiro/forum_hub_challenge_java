@@ -28,7 +28,7 @@ public class CursoController {
 
     @GetMapping
     public Page<DadosListagemCurso> listarCursos(@PageableDefault(sort = {"categoria"}) Pageable paginacao) {
-        return repository.findAll(paginacao).map(DadosListagemCurso::new);
+        return repository.findAllByAtivoTrue(paginacao).map(DadosListagemCurso::new);
     }
 
     @PutMapping
@@ -36,5 +36,12 @@ public class CursoController {
     public void atualizarCurso(@RequestBody DadosAtualizacaoCurso dados) {
         var curso = repository.getReferenceById(dados.id());
         curso.atualizarInformacoes(dados);
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public void excluirCurso(@PathVariable Long id) {
+        var curso = repository.getReferenceById(id);
+        curso.excluirCurso();
     }
 }

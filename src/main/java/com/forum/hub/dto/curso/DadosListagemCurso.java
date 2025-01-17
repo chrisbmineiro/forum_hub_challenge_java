@@ -9,9 +9,10 @@ public record DadosListagemCurso(
         String descricao,
         Integer cargaHoraria,
         Integer totalAulas,
-        Categoria categoria
+        Categoria categoria,
+        Boolean ativo
 ) {
     public DadosListagemCurso(Curso curso) {
-        this(curso.getId(),curso.getTitulo(), curso.getDescricao(), curso.getCargaHoraria(), curso.getTotalAulas(), curso.getCategoria());
+        this(curso.getId(),curso.getTitulo(), curso.getDescricao(), curso.getCargaHoraria(), curso.getTotalAulas(), curso.getCategoria(), curso.getAtivo());
     }
 }
