@@ -1,6 +1,7 @@
 package com.forum.hub.controller;
 
 import com.forum.hub.dto.curso.DadosAtualizacaoCurso;
+import com.forum.hub.dto.curso.DadosDetalhamentoCurso;
 import com.forum.hub.dto.curso.DadosListagemCurso;
 import com.forum.hub.dto.curso.DadosCadastroCurso;
 import com.forum.hub.model.Curso;
@@ -10,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("cursos")
@@ -21,27 +24,32 @@ public class CursoController {
 
     @PostMapping
     @Transactional
-    public void cadastrarCurso(@RequestBody DadosCadastroCurso dados) {
-        System.out.println(dados);
-        repository.save(new Curso(dados));
+    public ResponseEntity cadastrarCurso(@RequestBody DadosCadastroCurso dados, UriComponentsBuilder uriBuilder) {
+        var curso = new Curso(dados);
+        repository.save(curso);
+        var uri = uriBuilder.path("/cursos/{id}").buildAndExpand(curso.getId()).toUri();
+        return ResponseEntity.created(uri).body(new DadosDetalhamentoCurso(curso));
     }
 
     @GetMapping
-    public Page<DadosListagemCurso> listarCursos(@PageableDefault(sort = {"categoria"}) Pageable paginacao) {
-        return repository.findAllByAtivoTrue(paginacao).map(DadosListagemCurso::new);
+    public ResponseEntity<Page<DadosListagemCurso>> listarCursos(@PageableDefault(sort = {"categoria"}) Pageable paginacao) {
+        var page =  repository.findAllByAtivoTrue(paginacao).map(DadosListagemCurso::new);
+        return ResponseEntity.ok(page);
     }
 
     @PutMapping
     @Transactional
-    public void atualizarCurso(@RequestBody DadosAtualizacaoCurso dados) {
+    public ResponseEntity atualizarCurso(@RequestBody DadosAtualizacaoCurso dados) {
         var curso = repository.getReferenceById(dados.id());
         curso.atualizarInformacoes(dados);
+        return ResponseEntity.ok(new DadosDetalhamentoCurso(curso));
     }
 
     @DeleteMapping("/{id}")
     @Transactional
-    public void excluirCurso(@PathVariable Long id) {
+    public ResponseEntity excluirCurso(@PathVariable Long id) {
         var curso = repository.getReferenceById(id);
         curso.excluirCurso();
+        return ResponseEntity.noContent().build();
     }
 }

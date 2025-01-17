@@ -1,6 +1,8 @@
 package com.forum.hub.controller;
 
+import com.forum.hub.dto.curso.DadosDetalhamentoCurso;
 import com.forum.hub.dto.usuario.DadosAtualizacaoUsuario;
+import com.forum.hub.dto.usuario.DadosDetalhamentoUsuario;
 import com.forum.hub.dto.usuario.DadosListagemUsuario;
 import com.forum.hub.dto.usuario.DadosCadastroUsuario;
 import com.forum.hub.model.Status;
@@ -15,6 +17,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("usuarios")
@@ -31,27 +34,32 @@ public class UsuarioController {
 
     @PostMapping
     @Transactional
-    public void cadastrarUsuario(@RequestBody DadosCadastroUsuario dados) {
-        repository.save(new Usuario(dados));
+    public ResponseEntity cadastrarUsuario(@RequestBody DadosCadastroUsuario dados, UriComponentsBuilder uriBuilder) {
+        var usuario = new Usuario(dados);
+        repository.save(usuario);
+        var uri = uriBuilder.path("/usuarios/{id}").buildAndExpand(usuario.getId()).toUri();
+        return ResponseEntity.created(uri).body(new DadosDetalhamentoUsuario(usuario));
     }
 
     @GetMapping
-    public Page<DadosListagemUsuario> listarUsuarios(@PageableDefault(sort = {"nome"}) Pageable paginacao) {
-        return repository.findAllByStatus(Status.ATIVO, paginacao).map(DadosListagemUsuario::new);
+    public ResponseEntity<Page<DadosListagemUsuario>> listarUsuarios(@PageableDefault(sort = {"nome"}) Pageable paginacao) {
+        var page = repository.findAllByStatus(Status.ATIVO, paginacao).map(DadosListagemUsuario::new);
+        return ResponseEntity.ok(page);
     }
 
     @PutMapping
     @Transactional
-    public void atualizarUsuario(@RequestBody DadosAtualizacaoUsuario dados) {
+    public ResponseEntity atualizarUsuario(@RequestBody DadosAtualizacaoUsuario dados) {
         var usuario = repository.getReferenceById(dados.id());
         usuario.atualizarInformacoes(dados);
+        return ResponseEntity.ok(new DadosDetalhamentoUsuario(usuario));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity desativarUsuario(@PathVariable Long id) {
         try {
             usuarioService.desativarUsuario(id);
-            return ResponseEntity.ok("Usuário desativado com sucesso");
+            return ResponseEntity.noContent().build();
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
