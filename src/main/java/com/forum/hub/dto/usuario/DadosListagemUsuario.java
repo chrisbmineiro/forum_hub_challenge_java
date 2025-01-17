@@ -9,10 +9,10 @@ public record DadosListagemUsuario(
         String nome,
         String username,
         String email,
-        Role role,
-        Status status
+        Status status,
+        Role role
 ) {
     public DadosListagemUsuario(Usuario usuario) {
-        this(usuario.getId(), usuario.getNome(), usuario.getUsername(), usuario.getEmail(), usuario.getRole(), usuario.getStatus());
+        this(usuario.getId(), usuario.getNome(), usuario.getUsername(), usuario.getEmail(), usuario.getStatus(), usuario.getRole());
     }
 }

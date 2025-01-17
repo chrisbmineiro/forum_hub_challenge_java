@@ -1,5 +1,6 @@
 package com.forum.hub.model;
 
+import com.forum.hub.dto.curso.DadosAtualizacaoCurso;
 import com.forum.hub.dto.curso.DadosCadastroCurso;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,10 +18,13 @@ public class Curso {
     private Long id;
     private String titulo;
     private String descricao;
-    @Column(name = "carga_horaria", nullable = false)
+
+    @Column(name = "carga_horaria")
     private Integer cargaHoraria;
-    @Column(name = "total_aulas", nullable = false)
+
+    @Column(name = "total_aulas")
     private Integer totalAulas;
+
     @Enumerated(EnumType.STRING)
     private Categoria categoria;
 
@@ -57,5 +61,20 @@ public class Curso {
 
     public Integer getTotalAulas() {
         return totalAulas;
+    }
+
+    public void atualizarInformacoes(DadosAtualizacaoCurso dados) {
+        if (dados.titulo() != null) {
+            this.titulo = dados.titulo();
+        }
+        if (dados.descricao() != null) {
+            this.descricao = dados.descricao();
+        }
+        if (dados.cargaHoraria() != null) {
+            this.cargaHoraria = dados.cargaHoraria();
+        }
+        if (dados.totalAulas() != null) {
+            this.totalAulas = dados.totalAulas();
+        }
     }
 }

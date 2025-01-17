@@ -1,5 +1,6 @@
 package com.forum.hub.controller;
 
+import com.forum.hub.dto.curso.DadosAtualizacaoCurso;
 import com.forum.hub.dto.curso.DadosListagemCurso;
 import com.forum.hub.dto.curso.DadosCadastroCurso;
 import com.forum.hub.model.Curso;
@@ -21,11 +22,19 @@ public class CursoController {
     @PostMapping
     @Transactional
     public void cadastrarCurso(@RequestBody DadosCadastroCurso dados) {
+        System.out.println(dados);
         repository.save(new Curso(dados));
     }
 
     @GetMapping
     public Page<DadosListagemCurso> listarCursos(@PageableDefault(sort = {"categoria"}) Pageable paginacao) {
         return repository.findAll(paginacao).map(DadosListagemCurso::new);
+    }
+
+    @PutMapping
+    @Transactional
+    public void atualizarCurso(@RequestBody DadosAtualizacaoCurso dados) {
+        var curso = repository.getReferenceById(dados.id());
+        curso.atualizarInformacoes(dados);
     }
 }
