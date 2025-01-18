@@ -64,4 +64,10 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity detalharUsuario(@PathVariable Long id) {
+        var usuario = repository.getReferenceById(id);
+        return ResponseEntity.ok(new DadosDetalhamentoUsuario(usuario));
+    }
 }

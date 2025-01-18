@@ -4,6 +4,7 @@ import com.forum.hub.dto.curso.DadosAtualizacaoCurso;
 import com.forum.hub.dto.curso.DadosDetalhamentoCurso;
 import com.forum.hub.dto.curso.DadosListagemCurso;
 import com.forum.hub.dto.curso.DadosCadastroCurso;
+import com.forum.hub.dto.usuario.DadosDetalhamentoUsuario;
 import com.forum.hub.model.Curso;
 import com.forum.hub.repository.CursoRepository;
 import jakarta.transaction.Transactional;
@@ -51,5 +52,11 @@ public class CursoController {
         var curso = repository.getReferenceById(id);
         curso.excluirCurso();
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity detalharCurso(@PathVariable Long id) {
+        var curso = repository.getReferenceById(id);
+        return ResponseEntity.ok(new DadosDetalhamentoCurso(curso));
     }
 }
